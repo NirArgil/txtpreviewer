@@ -1,0 +1,6 @@
+this is an example text that exclude the comments, multi line and one line
+
+/* bla bla bla
+Cha cha cha gooooo */
+
+// bla bla bla.
