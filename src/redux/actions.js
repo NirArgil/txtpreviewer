@@ -2,8 +2,6 @@ import { GetText, GetTextError } from "./types"
 
 export const getText = (e) => dispatch => {
   try {
-    let contentWithoutComments;
-
     const reader = new FileReader()
     reader.onload = async (e) => {
       const text = (e.target.result)
@@ -14,9 +12,9 @@ export const getText = (e) => dispatch => {
 
       const a = text.split(multiCommentsSliced);
       const b = a.join('');
-      const c = b.split(oneLineComments)
+      const c = b.split(oneLineComments);
 
-      contentWithoutComments = c.join('');
+      const contentWithoutComments = c.join('');
 
       dispatch({
         type: GetText,

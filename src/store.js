@@ -12,7 +12,6 @@ const persistedState = localStorage.getItem('text')
 
 const store = createStore(getTextReducer, persistedState, composeWithDevTools(applyMiddleware(...middleware)))
 
-
 store.subscribe(() => {
     localStorage.setItem('text', JSON.stringify(store.getState()))
 })
