@@ -2,23 +2,70 @@ import { GetText, GetTextError } from "./types"
 
 export const getText = (e) => dispatch => {
   try {
+
     const reader = new FileReader()
+
     reader.onload = async (e) => {
       const text = (e.target.result)
 
-      const multiCommentsSliced = text.slice(text.indexOf("/*"), (text.indexOf("*/") + 2));
+      const lines = text.split("\n");
 
-      const oneLineComments = text.slice(text.indexOf("//"), text.indexOf('.'));
+      let isMultiLineCommentOn = false;
 
-      const a = text.split(multiCommentsSliced);
-      const b = a.join('');
-      const c = b.split(oneLineComments);
+      const finalArr = lines.map((line, index) => {
+        if (!line.includes("//") && !line.includes("/*") && !isMultiLineCommentOn)
+          return line;
 
-      const contentWithoutComments = c.join('');
+        let newLine = "";
+        let hasSkipped = false;
+
+        for (let charIndex = 0; charIndex < line.length; charIndex++) {
+
+          if (hasSkipped) {
+            hasSkipped = false;
+            continue;
+          }
+
+          const char = line.charAt(charIndex);
+
+          if (char === "/") {
+            const nextChar = line.charAt(charIndex + 1);
+
+            if (nextChar === "/")
+              break;
+
+            if (nextChar === "*") {
+              isMultiLineCommentOn = true;
+              continue;
+            }
+          }
+
+          if (isMultiLineCommentOn) {
+
+            if (char === "*") {
+              const nextChar = line.charAt(charIndex + 1);
+
+              if (nextChar === "/") {
+                isMultiLineCommentOn = false;
+                hasSkipped = true
+                continue;
+              }
+            }
+          }
+
+          if (!isMultiLineCommentOn)
+            newLine += char
+        }
+
+        return newLine.trim();
+
+      }).filter(row => !!row)
+
+      const finalText = finalArr.join("")
 
       dispatch({
         type: GetText,
-        payload: contentWithoutComments
+        payload: finalText
       })
     };
 
