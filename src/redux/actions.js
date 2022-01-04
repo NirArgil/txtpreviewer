@@ -62,7 +62,7 @@ export const getText = (e) => dispatch => {
       }).filter(row => !!row)
 
       const finalText = finalArr.join("")
-asd
+
       dispatch({
         type: GetText,
         payload: finalText
